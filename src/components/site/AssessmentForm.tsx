@@ -1,12 +1,17 @@
 import { useId, useState, type FormEvent } from "react";
+import emailjs from "@emailjs/browser";
 import { PRIMARY_NEEDS } from "@/lib/site";
+
+// Replace with your actual EmailJS values from the dashboard
+const EMAILJS_SERVICE_ID = "service_om5swhn";
+const EMAILJS_TEMPLATE_ID = "template_zvvjbgw";
+const EMAILJS_PUBLIC_KEY = "tirmJuFoMBLZzB5AC";
 
 /**
  * Operations Assessment form.
  *
- * The container below is intentionally a single swappable panel:
- * <CRM_FORM_EMBED_HERE>: replace the <form> element with the external
- * form embed or wire handleSubmit to the CRM API when it is provisioned.
+ * Submissions are sent via EmailJS directly to Gmail.
+ * See EMAILJS_SERVICE_ID / EMAILJS_TEMPLATE_ID / EMAILJS_PUBLIC_KEY above.
  */
 export function AssessmentForm({
   submitLabel = "Start Assessment",
@@ -23,13 +28,37 @@ export function AssessmentForm({
 }) {
   const uid = useId();
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const isDarkGlass = appearance === "glass";
   const isLightGlass = appearance === "glass-light";
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // CRM submission is connected in a later phase.
-    setSubmitted(true);
+    setError(null);
+    setSending(true);
+
+    const formData = new FormData(event.currentTarget);
+    const params = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      company: formData.get("company"),
+      primaryNeed: formData.get("primaryNeed"),
+    };
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params, {
+        publicKey: EMAILJS_PUBLIC_KEY,
+      });
+      setSubmitted(true);
+    } catch (err) {
+      setError("Something went wrong sending your request. Please try again.");
+      console.error("EmailJS error:", err);
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -53,8 +82,8 @@ export function AssessmentForm({
         <div className="mt-8 rounded-lg border border-border bg-sand p-6">
           <p className="font-display text-lg font-semibold text-graphite">Thank you.</p>
           <p className="mt-2 text-[0.9375rem] text-neutral-body">
-            Your details have been recorded on this page. Once our assessment intake system is
-            connected, requests will route directly to the Adroit operations team.
+            Your details have been sent to our operations team. Someone will follow up shortly to
+            arrange your assessment.
           </p>
         </div>
       ) : (
@@ -107,11 +136,19 @@ export function AssessmentForm({
               ))}
             </select>
           </div>
+
+          {error && (
+            <p className="text-[0.875rem] font-medium text-red-600" role="alert">
+              {error}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="group relative mt-2 w-full overflow-hidden rounded-lg bg-orange px-6 py-4 font-display text-[0.9375rem] font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
+            disabled={sending}
+            className="group relative mt-2 w-full overflow-hidden rounded-lg bg-orange px-6 py-4 font-display text-[0.9375rem] font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
           >
-            {submitLabel}
+            {sending ? "Sending..." : submitLabel}
           </button>
           <p className={`text-center text-[0.8125rem] ${isDarkGlass ? "text-hero-muted" : "text-neutral-mute"}`}>
             We use your details only to prepare and schedule your assessment.
