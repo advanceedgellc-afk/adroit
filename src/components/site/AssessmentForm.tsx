@@ -124,7 +124,7 @@ export function AssessmentForm({
               name="primaryNeed"
               required
               defaultValue=""
-              className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 ${isDarkGlass ? "border-glass-border bg-glass-field text-hero-foreground" : isLightGlass ? "border-glass-highlight bg-background/60 text-graphite" : "border-input bg-background text-graphite"}`}
+              className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 ${isDarkGlass ? "border-glass-border bg-glass-field text-[#2e2d2d]" : isLightGlass ? "border-glass-highlight bg-background/60 text-graphite" : "border-input bg-background text-graphite"}`}
             >
               <option value="" disabled>
                 Select a primary need
