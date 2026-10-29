@@ -234,7 +234,7 @@ function Home() {
               <p className="mt-7 max-w-2xl text-lg leading-relaxed text-hero-muted lg:text-[1.1875rem]">
                 Adroit combines intelligent business automation, healthcare revenue-cycle expertise
                 and professionally managed operations to help organizations reduce administrative work,
-                improvee performance and scale efficiently.
+                improve performance and scale efficiently.
               </p>
               <p className="mt-8 font-display text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-hero-foreground">
                 Business Automation <span className="text-orange">•</span> Healthcare RCM{" "}

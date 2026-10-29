@@ -3,9 +3,9 @@ import emailjs from "@emailjs/browser";
 import { PRIMARY_NEEDS } from "@/lib/site";
 
 // Replace with your actual EmailJS values from the dashboard
-const EMAILJS_SERVICE_ID = "service_om5swhn";
-const EMAILJS_TEMPLATE_ID = "template_zvvjbgw";
-const EMAILJS_PUBLIC_KEY = "tirmJuFoMBLZzB5AC";
+const EMAILJS_SERVICE_ID = "service_mozj91g";
+const EMAILJS_TEMPLATE_ID = "template_vwqf62h";
+const EMAILJS_PUBLIC_KEY = "tDugChOq5PZKhQpkI";
 
 /**
  * Operations Assessment form.
