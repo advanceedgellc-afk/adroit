@@ -39,13 +39,14 @@ export function AssessmentForm({
     setSending(true);
 
     const formData = new FormData(event.currentTarget);
+    const value = (key: string) => String(formData.get(key) ?? "").trim();
     const params = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      company: formData.get("company"),
-      primaryNeed: formData.get("primaryNeed"),
+      firstName: value("firstName"),
+      lastName: value("lastName"),
+      email: value("email"),
+      phone: value("phone"),
+      company: value("company"),
+      primaryNeed: value("primaryNeed"),
     };
 
     try {
@@ -89,24 +90,26 @@ export function AssessmentForm({
       ) : (
         <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate={false}>
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field id={`${uid}-first`} label="First Name" name="firstName" autoComplete="given-name" glass={isDarkGlass} lightGlass={isLightGlass} />
-            <Field id={`${uid}-last`} label="Last Name" name="lastName" autoComplete="family-name" glass={isDarkGlass} lightGlass={isLightGlass} />
+            <Field id={`${uid}-first`} label="First Name" name="firstName" placeholder="John" autoComplete="given-name" glass={isDarkGlass} lightGlass={isLightGlass} />
+            <Field id={`${uid}-last`} label="Last Name" name="lastName" placeholder="Smith" autoComplete="family-name" glass={isDarkGlass} lightGlass={isLightGlass} />
           </div>
           <Field
             id={`${uid}-email`}
             label="Work Email"
             name="email"
             type="email"
+            placeholder="john@yourcompany.com"
             autoComplete="email"
             glass={isDarkGlass}
             lightGlass={isLightGlass}
           />
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field id={`${uid}-phone`} label="Phone" name="phone" type="tel" autoComplete="tel" glass={isDarkGlass} lightGlass={isLightGlass} />
+            <Field id={`${uid}-phone`} label="Phone" name="phone" type="tel" placeholder="(713) 555-0123" inputMode="tel" autoComplete="tel" glass={isDarkGlass} lightGlass={isLightGlass} />
             <Field
               id={`${uid}-company`}
               label="Company"
               name="company"
+              placeholder="Acme Inc."
               autoComplete="organization"
               glass={isDarkGlass}
               lightGlass={isLightGlass}
@@ -124,7 +127,7 @@ export function AssessmentForm({
               name="primaryNeed"
               required
               defaultValue=""
-              className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 ${isDarkGlass ? "border-glass-border bg-glass-field text-[#2e2d2d]" : isLightGlass ? "border-glass-highlight bg-background/60 text-graphite" : "border-input bg-background text-graphite"}`}
+              className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 [&>option]:bg-white [&>option]:text-graphite ${isDarkGlass ? "border-glass-border bg-glass-field text-hero-foreground" : isLightGlass ? "border-glass-highlight bg-background/60 text-graphite" : "border-input bg-background text-graphite"}`}
             >
               <option value="" disabled>
                 Select a primary need
@@ -164,6 +167,8 @@ function Field({
   label,
   name,
   type = "text",
+  placeholder,
+  inputMode,
   autoComplete,
   glass = false,
   lightGlass = false,
@@ -172,6 +177,8 @@ function Field({
   label: string;
   name: string;
   type?: string;
+  placeholder?: string;
+  inputMode?: "text" | "email" | "tel" | "numeric";
   autoComplete?: string;
   glass?: boolean;
   lightGlass?: boolean;
@@ -188,9 +195,11 @@ function Field({
         id={id}
         name={name}
         type={type}
+        placeholder={placeholder}
+        inputMode={inputMode}
         required
         autoComplete={autoComplete}
-        className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors placeholder:text-neutral-mute focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 ${glass ? "border-glass-border bg-glass-field text-hero-foreground" : lightGlass ? "border-glass-highlight bg-background/60 text-graphite" : "border-input bg-background text-graphite"}`}
+        className={`h-12 w-full rounded-lg border px-4 text-[0.9375rem] outline-none transition-colors focus-visible:border-orange focus-visible:ring-2 focus-visible:ring-ring/30 ${glass ? "border-glass-border bg-glass-field text-hero-foreground placeholder:text-hero-muted/60" : lightGlass ? "border-glass-highlight bg-background/60 text-graphite placeholder:text-neutral-mute" : "border-input bg-background text-graphite placeholder:text-neutral-mute"}`}
       />
     </div>
   );
